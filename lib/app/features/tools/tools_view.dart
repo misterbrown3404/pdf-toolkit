@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../shared/components/tool_card.dart';
-import '../../shared/models/tool_item_model.dart';
-import '../../shared/utils/tools_catalog.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_typography.dart';
-import '../home/home_controller.dart';
+import 'models/tools_filter_category_enum.dart';
+import 'tools_controller.dart';
+import 'widgets/tools_category_filter_pills.dart';
+import 'widgets/tools_empty_state.dart';
+import 'widgets/tools_grid_card.dart';
+import 'widgets/tools_header_banner.dart';
+import 'widgets/tools_popular_section.dart';
+import 'widgets/tools_search_bar.dart';
 
-class ToolsView extends GetView<HomeController> {
+class ToolsView extends GetView<ToolsController> {
   const ToolsView({super.key});
 
   @override
@@ -15,117 +19,85 @@ class ToolsView extends GetView<HomeController> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 70,
-        titleSpacing: 16,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           children: [
-            Text(
-              'All Tools',
-              style: AppTypography.headlineSmall.copyWith(
-                fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-              ),
-            ),
-            Text(
-              'Everything you need to manage your documents',
-              style: AppTypography.bodySmall.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textMutedLight,
-              ),
-            ),
+            // Header Banner
+            const ToolsHeaderBanner(),
+
+            // Search Bar
+            const ToolsSearchBar(),
+            const SizedBox(height: 14),
+
+            // Category Filter Pills
+            const ToolsCategoryFilterPills(),
+            const SizedBox(height: 18),
+
+            // Popular Tools Section (shown when no search and "All" category)
+            Obx(() {
+              if (controller.searchQuery.value.isEmpty &&
+                  controller.selectedCategory.value == ToolsFilterCategory.all) {
+                return const Padding(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: ToolsPopularSection(),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+
+            // Section Title
+            Obx(() {
+              final isSearching = controller.searchQuery.value.isNotEmpty;
+              final count = controller.filteredTools.length;
+              final title = isSearching ? 'Search Results ($count)' : 'All Tools';
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTypography.titleMedium.copyWith(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16,
+                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                      ),
+                    ),
+                    if (!isSearching)
+                      Text(
+                        '$count tools available',
+                        style: AppTypography.labelSmall.copyWith(
+                          color: isDark ? AppColors.textSecondaryDark : AppColors.textMutedLight,
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            }),
+
+            // Tools List or Empty State
+            Obx(() {
+              final tools = controller.filteredTools;
+              if (tools.isEmpty) {
+                return const ToolsEmptyState();
+              }
+
+              return Column(
+                children: tools.map((tool) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: ToolsGridCard(tool: tool),
+                  );
+                }).toList(),
+              );
+            }),
+
+            const SizedBox(height: 36),
           ],
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        children: [
-          _buildCategorySection(
-            context,
-            title: 'Organize & Manage',
-            tools: ToolsCatalog.allTools
-                .where((t) => t.category == ToolCategory.organize && t.id != 'more_tools')
-                .toList(),
-            isDark: isDark,
-          ),
-          _buildCategorySection(
-            context,
-            title: 'Convert & Create',
-            tools: ToolsCatalog.allTools
-                .where((t) => t.category == ToolCategory.convert)
-                .toList(),
-            isDark: isDark,
-          ),
-          _buildCategorySection(
-            context,
-            title: 'Scan & Digitize',
-            tools: ToolsCatalog.allTools
-                .where((t) => t.category == ToolCategory.scan)
-                .toList(),
-            isDark: isDark,
-          ),
-          _buildCategorySection(
-            context,
-            title: 'Optimize',
-            tools: ToolsCatalog.allTools
-                .where((t) => t.category == ToolCategory.optimize)
-                .toList(),
-            isDark: isDark,
-          ),
-          _buildCategorySection(
-            context,
-            title: 'Security & Privacy',
-            tools: ToolsCatalog.allTools
-                .where((t) => t.category == ToolCategory.security)
-                .toList(),
-            isDark: isDark,
-          ),
-          const SizedBox(height: 36),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategorySection(
-    BuildContext context, {
-    required String title,
-    required List<ToolItemModel> tools,
-    required bool isDark,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-          child: Text(
-            title,
-            style: AppTypography.titleMedium.copyWith(
-              fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-              letterSpacing: 0.3,
-            ),
-          ),
-        ),
-        GridView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: tools.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 1.05,
-          ),
-          itemBuilder: (context, index) {
-            final tool = tools[index];
-            return ToolCard(
-              tool: tool,
-              onTap: () => controller.onToolTap(tool.route),
-            );
-          },
-        ),
-        const SizedBox(height: 12),
-      ],
     );
   }
 }

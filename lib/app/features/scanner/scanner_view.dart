@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../theme/app_colors.dart';
 import 'scanner_controller.dart';
 import 'widgets/scanner_bottom_controls.dart';
@@ -17,7 +18,9 @@ class ScannerView extends GetView<ScannerController> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       body: SafeArea(
         child: Obx(() {
           if (controller.isSuccess.value) {
@@ -34,9 +37,7 @@ class ScannerView extends GetView<ScannerController> {
               ScannerHeaderBanner(onBack: () => Get.back()),
 
               // Camera Viewfinder Box with Laser Scan Beam & Orange Corners
-              Expanded(
-                child: ScannerCameraViewfinder(controller: controller),
-              ),
+              Expanded(child: ScannerCameraViewfinder(controller: controller)),
 
               // Mode Selector (Document, Batch, ID Card, Whiteboard)
               ScannerModeSelector(controller: controller),

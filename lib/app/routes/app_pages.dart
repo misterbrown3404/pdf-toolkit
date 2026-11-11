@@ -19,10 +19,14 @@ import '../features/protect_pdf/protect_pdf_binding.dart';
 import '../features/protect_pdf/protect_pdf_view.dart';
 import '../features/scanner/scanner_binding.dart';
 import '../features/scanner/scanner_view.dart';
+import '../features/settings/settings_binding.dart';
+import '../features/settings/settings_view.dart';
 import '../features/splash/splash_binding.dart';
 import '../features/splash/splash_view.dart';
 import '../features/split_pdf/split_pdf_binding.dart';
 import '../features/split_pdf/split_pdf_view.dart';
+import '../features/tools/tools_binding.dart';
+import '../features/tools/tools_view.dart';
 import '../features/watermark/watermark_binding.dart';
 import '../features/watermark/watermark_view.dart';
 import 'app_routes.dart';
@@ -47,6 +51,11 @@ class AppPages {
       name: AppRoutes.files,
       page: () => const FilesView(),
       binding: FilesBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.tools,
+      page: () => const ToolsView(),
+      binding: ToolsBinding(),
     ),
     GetPage(
       name: AppRoutes.pdfViewer,
@@ -97,6 +106,11 @@ class AppPages {
       name: AppRoutes.premium,
       page: () => const PremiumView(),
       binding: PremiumBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.settings,
+      page: () => const SettingsView(),
+      binding: SettingsBinding(),
     ),
   ];
 }
