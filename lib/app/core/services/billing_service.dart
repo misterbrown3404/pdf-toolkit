@@ -4,7 +4,15 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'storage_service.dart';
 
 class BillingService extends GetxService {
-  final StorageService _storageService = Get.find<StorageService>();
+  final StorageService? _injectedStorageService;
+
+  BillingService({StorageService? storageService})
+      : _injectedStorageService = storageService;
+
+  StorageService? get _storageService =>
+      _injectedStorageService ??
+      (Get.isRegistered<StorageService>() ? Get.find<StorageService>() : null);
+
   final InAppPurchase _iap = InAppPurchase.instance;
 
   StreamSubscription<List<PurchaseDetails>>? _subscription;
@@ -12,19 +20,28 @@ class BillingService extends GetxService {
   final RxList<ProductDetails> products = <ProductDetails>[].obs;
   final RxBool isPurchasing = false.obs;
 
+  final Rx<PurchaseStatus?> lastPurchaseStatus = Rx<PurchaseStatus?>(null);
+  final RxString lastPurchasedProductId = ''.obs;
+
   static const String subscriptionMonthlyId = 'pdf_toolkit_premium_monthly';
   static const String subscriptionYearlyId = 'pdf_toolkit_premium_yearly';
   static const String lifetimeId = 'pdf_toolkit_premium_lifetime';
 
   Future<BillingService> init() async {
-    isAvailable.value = await _iap.isAvailable();
-    if (isAvailable.value) {
-      _subscription = _iap.purchaseStream.listen(
-        _onPurchaseUpdated,
-        onDone: () => _subscription?.cancel(),
-        onError: (error) {},
-      );
-      await loadProducts();
+    try {
+      isAvailable.value = await _iap.isAvailable();
+      if (isAvailable.value) {
+        _subscription = _iap.purchaseStream.listen(
+          _onPurchaseUpdated,
+          onDone: () => _subscription?.cancel(),
+          onError: (_) {
+            isPurchasing.value = false;
+          },
+        );
+        await loadProducts();
+      }
+    } catch (_) {
+      isAvailable.value = false;
     }
     return this;
   }
@@ -32,11 +49,13 @@ class BillingService extends GetxService {
   Future<void> loadProducts() async {
     if (!isAvailable.value) return;
 
-    final ids = {subscriptionMonthlyId, subscriptionYearlyId, lifetimeId};
-    final response = await _iap.queryProductDetails(ids);
-    if (response.error == null) {
-      products.assignAll(response.productDetails);
-    }
+    try {
+      final ids = {subscriptionMonthlyId, subscriptionYearlyId, lifetimeId};
+      final response = await _iap.queryProductDetails(ids);
+      if (response.error == null) {
+        products.assignAll(response.productDetails);
+      }
+    } catch (_) {}
   }
 
   Future<void> buyProduct(ProductDetails product) async {
@@ -48,8 +67,9 @@ class BillingService extends GetxService {
       } else {
         await _iap.buyNonConsumable(purchaseParam: purchaseParam);
       }
-    } finally {
+    } catch (e) {
       isPurchasing.value = false;
+      rethrow;
     }
   }
 
@@ -57,21 +77,36 @@ class BillingService extends GetxService {
     isPurchasing.value = true;
     try {
       await _iap.restorePurchases();
-    } finally {
+    } catch (e) {
       isPurchasing.value = false;
+      rethrow;
     }
   }
 
-  void _onPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+  Future<void> _onPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) async {
     for (final purchase in purchaseDetailsList) {
       if (purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored) {
-        _storageService.setPremium(true);
-        if (purchase.pendingCompletePurchase) {
-          _iap.completePurchase(purchase);
+        final storage = _storageService;
+        if (storage != null) {
+          await storage.setPremium(true);
+          final plan = purchase.productID.contains('lifetime')
+              ? 'lifetime'
+              : (purchase.productID.contains('yearly') ? 'yearly' : 'monthly');
+          await storage.setPremiumPlan(plan);
         }
+        if (purchase.pendingCompletePurchase) {
+          await _iap.completePurchase(purchase);
+        }
+        lastPurchasedProductId.value = purchase.productID;
+        lastPurchaseStatus.value = purchase.status;
+        isPurchasing.value = false;
       } else if (purchase.status == PurchaseStatus.error) {
-        // Handle purchase error
+        lastPurchaseStatus.value = PurchaseStatus.error;
+        isPurchasing.value = false;
+      } else if (purchase.status == PurchaseStatus.canceled) {
+        lastPurchaseStatus.value = PurchaseStatus.canceled;
+        isPurchasing.value = false;
       }
     }
   }
@@ -82,4 +117,3 @@ class BillingService extends GetxService {
     super.onClose();
   }
 }
-

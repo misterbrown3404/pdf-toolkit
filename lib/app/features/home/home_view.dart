@@ -21,58 +21,66 @@ class HomeView extends GetView<HomeController> {
       const SettingsView(),
     ];
 
-    return Scaffold(
-      body: Obx(() => IndexedStack(
+    return Obx(
+      () => PopScope(
+        canPop: controller.currentTabIndex.value == 0,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop && controller.currentTabIndex.value != 0) {
+            controller.changeTab(0);
+          }
+        },
+        child: Scaffold(
+          body: IndexedStack(
             index: controller.currentTabIndex.value,
             children: pages,
-          )),
-      bottomNavigationBar: Obx(
-        () => Container(
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.surfaceDark : Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 15,
-                offset: const Offset(0, -4),
-              ),
-            ],
-            border: Border(
-              top: BorderSide(
-                color: isDark ? AppColors.borderDark : AppColors.borderLightMuted,
-                width: 1,
+          ),
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.surfaceDark : Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 15,
+                  offset: const Offset(0, -4),
+                ),
+              ],
+              border: Border(
+                top: BorderSide(
+                  color: isDark ? AppColors.borderDark : AppColors.borderLightMuted,
+                  width: 1,
+                ),
               ),
             ),
-          ),
-          child: NavigationBar(
-            height: 68,
-            selectedIndex: controller.currentTabIndex.value,
-            onDestinationSelected: controller.changeTab,
-            backgroundColor: Colors.transparent,
-            indicatorColor: AppColors.primary.withValues(alpha: 0.15),
-            elevation: 0,
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home_rounded, color: AppColors.primary),
-                label: 'Home',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.layers_outlined),
-                selectedIcon: Icon(Icons.layers_rounded, color: AppColors.primary),
-                label: 'Tools',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.folder_outlined),
-                selectedIcon: Icon(Icons.folder_rounded, color: AppColors.primary),
-                label: 'Files',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.settings_outlined),
-                selectedIcon: Icon(Icons.settings_rounded, color: AppColors.primary),
-                label: 'Settings',
-              ),
-            ],
+            child: NavigationBar(
+              height: 68,
+              selectedIndex: controller.currentTabIndex.value,
+              onDestinationSelected: controller.changeTab,
+              backgroundColor: Colors.transparent,
+              indicatorColor: AppColors.primary.withValues(alpha: 0.15),
+              elevation: 0,
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.home_outlined),
+                  selectedIcon: Icon(Icons.home_rounded, color: AppColors.primary),
+                  label: 'Home',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.layers_outlined),
+                  selectedIcon: Icon(Icons.layers_rounded, color: AppColors.primary),
+                  label: 'Tools',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.folder_outlined),
+                  selectedIcon: Icon(Icons.folder_rounded, color: AppColors.primary),
+                  label: 'Files',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.settings_outlined),
+                  selectedIcon: Icon(Icons.settings_rounded, color: AppColors.primary),
+                  label: 'Settings',
+                ),
+              ],
+            ),
           ),
         ),
       ),

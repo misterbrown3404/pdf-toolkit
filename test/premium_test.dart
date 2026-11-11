@@ -8,6 +8,7 @@ import 'package:pdf_toolkit/app/features/premium/widgets/premium_action_button.d
 import 'package:pdf_toolkit/app/features/premium/widgets/premium_active_view.dart';
 import 'package:pdf_toolkit/app/features/premium/widgets/premium_features_card.dart';
 import 'package:pdf_toolkit/app/features/premium/widgets/premium_header_banner.dart';
+import 'package:pdf_toolkit/app/features/premium/widgets/premium_legal_footer.dart';
 import 'package:pdf_toolkit/app/features/premium/widgets/premium_plan_tile.dart';
 import 'package:pdf_toolkit/app/features/premium/widgets/premium_plans_selector.dart';
 import 'package:pdf_toolkit/app/features/premium/widgets/premium_success_view.dart';
@@ -204,6 +205,20 @@ void main() {
       expect(find.byType(PremiumFeaturesCard), findsOneWidget);
       expect(find.byType(PremiumPlansSelector), findsOneWidget);
       expect(find.byType(PremiumActionButton), findsOneWidget);
+      expect(find.byType(PremiumLegalFooter), findsOneWidget);
+    });
+
+    testWidgets('PremiumLegalFooter renders clickable EULA and Privacy Policy', (tester) async {
+      await tester.pumpWidget(
+        GetMaterialApp(
+          home: Scaffold(
+            body: PremiumLegalFooter(controller: controller),
+          ),
+        ),
+      );
+
+      expect(find.text('Terms of Use (EULA)'), findsOneWidget);
+      expect(find.text('Privacy Policy'), findsOneWidget);
     });
   });
 }

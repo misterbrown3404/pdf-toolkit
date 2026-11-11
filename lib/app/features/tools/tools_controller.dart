@@ -116,6 +116,51 @@ class ToolsController extends GetxController {
       return;
     }
 
+    if (tool.id == 'pdf_to_word' || tool.id == 'pdf_to_excel' || tool.id == 'pdf_to_powerpoint') {
+      _showComingSoonDialog(context, tool);
+      return;
+    }
+
     Get.toNamed(tool.route);
+  }
+
+  void _showComingSoonDialog(BuildContext context, ToolItemModel tool) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: tool.color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(tool.icon, color: tool.color, size: 20),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                '${tool.title} Coming Soon',
+                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          '${tool.title} conversion is currently being finalized for our upcoming release. Pro members will receive unlimited access automatically.',
+          style: const TextStyle(height: 1.45),
+        ),
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF97316)),
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Got it', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 }
