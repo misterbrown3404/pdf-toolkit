@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../shared/components/ad_banner_card.dart';
 import '../../../theme/app_colors.dart';
 import '../home_controller.dart';
 import '../widgets/home_header_app_bar.dart';
@@ -38,6 +39,15 @@ class HomeTab extends GetView<HomeController> {
           // 4. Recent Documents Card
           SliverToBoxAdapter(
             child: HomeRecentFilesCard(controller: controller),
+          ),
+
+          // 5. Native Ad Banner
+          const SliverToBoxAdapter(
+            child: AdBannerCard(),
+          ),
+
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 24),
           ),
         ],
       ),

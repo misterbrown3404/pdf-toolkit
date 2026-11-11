@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import '../../core/services/ads_service.dart';
 import '../../core/services/file_service.dart';
 import '../../core/services/pdf_service.dart';
 import '../../core/services/storage_service.dart';
@@ -30,6 +31,9 @@ class ScannerController extends GetxController {
 
   StorageService? get _storageService =>
       _injectedStorageService ?? (Get.isRegistered<StorageService>() ? Get.find<StorageService>() : null);
+
+  AdsService? get _adsService =>
+      Get.isRegistered<AdsService>() ? Get.find<AdsService>() : null;
 
   final RxList<ScannedPageModel> pages = <ScannedPageModel>[].obs;
   final RxInt currentPageIndex = 0.obs;
@@ -257,6 +261,7 @@ class ScannerController extends GetxController {
       generatedPdfSize.value = size;
       generatedPdfPages.value = pages.length;
       isSuccess.value = true;
+      _adsService?.showInterstitialIfReady();
     } catch (e) {
       Get.snackbar('Error', 'Failed to generate PDF: $e');
     } finally {

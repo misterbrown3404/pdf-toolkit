@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as p;
+import '../../core/services/ads_service.dart';
 import '../../core/services/file_service.dart';
 import '../../core/services/pdf_service.dart';
 import '../../core/services/storage_service.dart';
@@ -30,6 +31,8 @@ class ProtectPdfController extends GetxController {
       _injectedPdfService ?? (Get.isRegistered<PdfService>() ? Get.find<PdfService>() : null);
   StorageService? get _storageService =>
       _injectedStorageService ?? (Get.isRegistered<StorageService>() ? Get.find<StorageService>() : null);
+  AdsService? get _adsService =>
+      Get.isRegistered<AdsService>() ? Get.find<AdsService>() : null;
 
   final Rx<ProtectMode> mode = ProtectMode.protect.obs;
   final Rx<PdfDocumentModel?> selectedPdf = Rx<PdfDocumentModel?>(null);
@@ -235,6 +238,7 @@ class ProtectPdfController extends GetxController {
       generatedPdfSize.value = size;
       generatedPdfPages.value = pdf.pageCount ?? 1;
       isSuccess.value = true;
+      _adsService?.showInterstitialIfReady();
     } catch (e) {
       Get.snackbar('Security Error', e.toString().replaceAll('Exception: ', ''));
     } finally {

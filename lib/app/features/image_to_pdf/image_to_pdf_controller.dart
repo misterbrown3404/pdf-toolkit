@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart' as pw_pdf;
 import 'package:pdf/widgets.dart' as pw;
+import '../../core/services/ads_service.dart';
 import '../../core/services/file_service.dart';
 import '../../core/services/pdf_service.dart';
 import '../../core/services/storage_service.dart';
@@ -32,6 +33,9 @@ class ImageToPdfController extends GetxController {
 
   StorageService? get _storageService =>
       _injectedStorageService ?? (Get.isRegistered<StorageService>() ? Get.find<StorageService>() : null);
+
+  AdsService? get _adsService =>
+      Get.isRegistered<AdsService>() ? Get.find<AdsService>() : null;
 
   final RxList<ImageToPdfItemModel> imageItems = <ImageToPdfItemModel>[].obs;
   final RxString pageOrientation = 'portrait'.obs;
@@ -254,6 +258,7 @@ class ImageToPdfController extends GetxController {
       generatedPdfSize.value = size;
       generatedPdfPages.value = imageItems.length;
       isSuccess.value = true;
+      _adsService?.showInterstitialIfReady();
     } catch (e) {
       Get.snackbar('Error', 'Failed to convert images to PDF: $e');
     } finally {
