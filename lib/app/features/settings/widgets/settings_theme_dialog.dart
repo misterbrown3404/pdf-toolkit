@@ -95,3 +95,4 @@ class SettingsThemeDialog extends StatelessWidget {
     );
   }
 }
+

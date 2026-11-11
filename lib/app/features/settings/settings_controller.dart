@@ -212,3 +212,4 @@ class SettingsController extends GetxController {
     Get.toNamed(AppRoutes.premium);
   }
 }
+

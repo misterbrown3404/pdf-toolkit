@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.pdf_toolkit"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'app/bindings/initial_binding.dart';
@@ -14,11 +15,13 @@ void main() async {
   final storageService = await StorageService().init();
   Get.put<StorageService>(storageService, permanent: true);
 
-  final adsService = await AdsService().init();
+  final adsService = AdsService();
   Get.put<AdsService>(adsService, permanent: true);
+  unawaited(adsService.init());
 
-  final billingService = await BillingService().init();
+  final billingService = BillingService();
   Get.put<BillingService>(billingService, permanent: true);
+  unawaited(billingService.init());
 
   runApp(const PdfToolkitApp());
 }
