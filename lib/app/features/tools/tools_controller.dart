@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/services/storage_service.dart';
 import '../../routes/app_routes.dart';
+import '../../shared/models/tool_category_enum.dart';
 import '../../shared/models/tool_item_model.dart';
 import '../../shared/utils/tools_catalog.dart';
 import 'models/tools_filter_category_enum.dart';

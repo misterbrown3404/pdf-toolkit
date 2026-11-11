@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
+import '../models/tool_category_enum.dart';
 import '../models/tool_item_model.dart';
 
 class ToolsCatalog {

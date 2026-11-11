@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-
-enum ToolCategory {
-  organize,
-  convert,
-  security,
-  optimize,
-  scan,
-}
+import 'tool_category_enum.dart';
 
 class ToolItemModel {
   final String id;
@@ -31,4 +24,3 @@ class ToolItemModel {
     this.isNew = false,
   });
 }
-

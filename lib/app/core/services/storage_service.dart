@@ -41,6 +41,22 @@ class StorageService extends GetxService {
     await _box.write(StorageKeys.isPremium, value);
   }
 
+  String get premiumPlan => _box.read<String>(StorageKeys.premiumPlan) ?? 'monthly';
+
+  Future<void> setPremiumPlan(String planId) async {
+    await _box.write(StorageKeys.premiumPlan, planId);
+  }
+
+  String? get premiumExpiresAt => _box.read<String>(StorageKeys.premiumExpiresAt);
+
+  Future<void> setPremiumExpiresAt(String? dateStr) async {
+    if (dateStr == null) {
+      await _box.remove(StorageKeys.premiumExpiresAt);
+    } else {
+      await _box.write(StorageKeys.premiumExpiresAt, dateStr);
+    }
+  }
+
   // Recent files
   List<Map<String, dynamic>> getRecentFiles() {
     final list = _box.read<List<dynamic>>(StorageKeys.recentFiles);

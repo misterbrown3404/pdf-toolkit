@@ -10,7 +10,7 @@ import 'package:pdf_toolkit/app/features/tools/widgets/tools_header_banner.dart'
 import 'package:pdf_toolkit/app/features/tools/widgets/tools_popular_section.dart';
 import 'package:pdf_toolkit/app/features/tools/widgets/tools_pro_dialog.dart';
 import 'package:pdf_toolkit/app/features/tools/widgets/tools_search_bar.dart';
-import 'package:pdf_toolkit/app/shared/models/tool_item_model.dart';
+import 'package:pdf_toolkit/app/shared/models/tool_category_enum.dart';
 import 'package:pdf_toolkit/app/shared/utils/tools_catalog.dart';
 
 void main() {
