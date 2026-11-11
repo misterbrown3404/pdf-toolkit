@@ -1,0 +1,4 @@
+enum ProtectMode {
+  protect,
+  unlock,
+}
