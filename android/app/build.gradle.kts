@@ -29,6 +29,8 @@ android {
             val storeFilePath = keystoreProperties.getProperty("storeFile") ?: "upload-keystore.jks"
             storeFile = file(storeFilePath)
             storePassword = keystoreProperties.getProperty("storePassword") ?: "pdf_toolkit_2026"
+            enableV1Signing = true
+            enableV2Signing = true
         }
     }
 
