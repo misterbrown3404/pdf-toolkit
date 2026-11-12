@@ -10,7 +10,9 @@ import 'package:pdf_toolkit/app/features/tools/widgets/tools_header_banner.dart'
 import 'package:pdf_toolkit/app/features/tools/widgets/tools_popular_section.dart';
 import 'package:pdf_toolkit/app/features/tools/widgets/tools_pro_dialog.dart';
 import 'package:pdf_toolkit/app/features/tools/widgets/tools_search_bar.dart';
+import 'package:pdf_toolkit/app/routes/app_routes.dart';
 import 'package:pdf_toolkit/app/shared/models/tool_category_enum.dart';
+import 'package:pdf_toolkit/app/shared/models/tool_item_model.dart';
 import 'package:pdf_toolkit/app/shared/utils/tools_catalog.dart';
 
 void main() {
@@ -228,7 +230,16 @@ void main() {
     });
 
     testWidgets('ToolsProDialog renders Pro feature notice and actions', (tester) async {
-      final proTool = ToolsCatalog.allTools.firstWhere((t) => t.id == 'pdf_to_word');
+      const proTool = ToolItemModel(
+        id: 'pdf_to_word',
+        title: 'PDF to Word',
+        description: 'Convert PDF documents into editable Word (.docx)',
+        icon: Icons.description_rounded,
+        color: Color(0xFF2563EB),
+        route: AppRoutes.premium,
+        category: ToolCategory.convert,
+        isPremium: true,
+      );
 
       await tester.pumpWidget(
         MaterialApp(

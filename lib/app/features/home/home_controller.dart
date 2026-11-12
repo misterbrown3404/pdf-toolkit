@@ -23,11 +23,6 @@ class HomeController extends GetxController {
   }
 
   Future<void> initFiles() async {
-    final existing = storageService.getRecentFiles();
-    if (existing.isEmpty || existing.first['name'] != 'Merged_Document.pdf') {
-      await storageService.clearRecentFiles();
-      await fileService.ensureSampleDocuments();
-    }
     refreshAllFiles();
   }
 

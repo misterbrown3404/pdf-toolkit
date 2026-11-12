@@ -107,7 +107,7 @@ void main() {
       expect(find.byIcon(Icons.settings_rounded), findsOneWidget);
     });
 
-    testWidgets('SettingsPlanCard renders plan badge and app name', (tester) async {
+    testWidgets('SettingsPlanCard renders app name and version', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -117,12 +117,10 @@ void main() {
       );
 
       expect(find.text('PDF Toolkit'), findsOneWidget);
-      expect(find.text('Free Plan'), findsOneWidget);
-      expect(find.text('All-in-one PDF tools'), findsOneWidget);
-      expect(find.byIcon(Icons.chevron_right_rounded), findsOneWidget);
+      expect(find.text('All-in-one PDF tools • v1.0.0'), findsOneWidget);
     });
 
-    testWidgets('SettingsProBanner renders upgrade offer and button', (tester) async {
+    testWidgets('SettingsProBanner returns SizedBox.shrink when Pro is hidden', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -131,10 +129,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Upgrade to Premium'), findsOneWidget);
-      expect(find.text('Unlock all tools, remove limits and ads.'), findsOneWidget);
-      expect(find.text('Upgrade'), findsOneWidget);
-      expect(find.byIcon(Icons.workspace_premium_rounded), findsOneWidget);
+      expect(find.byType(SizedBox), findsOneWidget);
     });
 
     testWidgets('SettingsSectionCard displays header title and children', (tester) async {

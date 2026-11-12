@@ -54,7 +54,6 @@ class WatermarkController extends GetxController {
   Future<void> _loadRecentDocuments() async {
     try {
       if (_fileService != null) {
-        await _fileService!.ensureSampleDocuments();
         final docs = await _fileService!.getSavedDocuments();
         recentFiles.assignAll(docs);
 

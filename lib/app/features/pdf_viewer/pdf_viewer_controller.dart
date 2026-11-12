@@ -72,7 +72,6 @@ class DocumentViewerController extends GetxController {
   Future<void> _loadFallbackSample() async {
     try {
       if (_fileService != null) {
-        await _fileService!.ensureSampleDocuments();
         final docs = await _fileService!.getSavedDocuments();
         if (docs.isNotEmpty) {
           filePath.value = docs.first.path;
