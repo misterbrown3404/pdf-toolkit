@@ -1,0 +1,6 @@
+# Android Release Keystore Configuration
+# Store this file at android/key.properties
+storePassword=pdf_toolkit_2026
+keyPassword=pdf_toolkit_2026
+keyAlias=upload
+storeFile=upload-keystore.jks
