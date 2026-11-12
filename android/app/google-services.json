@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "458411818053",
+    "project_id": "pdftoolkit-8b383",
+    "storage_bucket": "pdftoolkit-8b383.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:458411818053:android:412589d7d774db5589b72c",
+        "android_client_info": {
+          "package_name": "com.nurehub.pdf_toolkit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiB9Va3IEX1QvY4Kfs-a8WcEF_izj35XI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -25,6 +25,11 @@
 # Image Compression
 -keep class com.fluttercandies.flutter_image_compress.** { *; }
 
+# Firebase & Crashlytics
+-keepattributes SourceFile,LineNumberTable
+-keep public class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
+
 # General optimization settings
 -dontwarn io.flutter.**
 -dontwarn com.google.android.gms.**

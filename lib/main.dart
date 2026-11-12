@@ -4,12 +4,17 @@ import 'package:get/get.dart';
 import 'app/bindings/initial_binding.dart';
 import 'app/core/services/ads_service.dart';
 import 'app/core/services/billing_service.dart';
+import 'app/core/services/crash_analytics_service.dart';
 import 'app/core/services/storage_service.dart';
 import 'app/routes/app_pages.dart';
 import 'app/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Crash Analytics first to capture startup errors
+  final crashService = await CrashAnalyticsService().init();
+  Get.put<CrashAnalyticsService>(crashService, permanent: true);
 
   // Async core services
   final storageService = await StorageService().init();
