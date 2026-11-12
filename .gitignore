@@ -46,3 +46,11 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Keystores and Firebase secrets
+*.jks
+*.keystore
+upload-keystore.jks
+key.properties
+**/google-services.json
+**/GoogleService-Info.plist
