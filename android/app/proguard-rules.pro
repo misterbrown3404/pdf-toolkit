@@ -25,12 +25,42 @@
 # Image Compression
 -keep class com.fluttercandies.flutter_image_compress.** { *; }
 
+# AndroidX WorkManager & Room (Prevents Failed to create an instance of WorkDatabase)
+-keep class * extends androidx.room.RoomDatabase {
+    public <init>();
+    *;
+}
+-keep class androidx.room.** { *; }
+-keep class androidx.work.** { *; }
+-keep class androidx.work.impl.** { *; }
+-keep class androidx.work.impl.WorkDatabase { *; }
+-keep class androidx.work.impl.WorkDatabase_Impl {
+    public <init>();
+    *;
+}
+-keep class * extends androidx.work.Worker {
+    public <init>(android.content.Context, androidx.work.WorkerParameters);
+}
+-keep class * extends androidx.work.ListenableWorker {
+    public <init>(android.content.Context, androidx.work.WorkerParameters);
+}
+-keep class androidx.startup.** { *; }
+-keep class * extends androidx.startup.Initializer { *; }
+-keep class androidx.sqlite.** { *; }
+-keep class androidx.datastore.** { *; }
+-keep class com.google.firebase.datastorage.** { *; }
+
 # Firebase & Crashlytics
 -keepattributes SourceFile,LineNumberTable
 -keep public class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
 
 # General optimization settings
+-dontwarn androidx.work.**
+-dontwarn androidx.room.**
+-dontwarn androidx.startup.**
+-dontwarn androidx.sqlite.**
+-dontwarn androidx.datastore.**
 -dontwarn io.flutter.**
 -dontwarn com.google.android.gms.**
 -dontwarn com.android.vending.billing.**
